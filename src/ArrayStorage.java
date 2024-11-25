@@ -32,20 +32,19 @@ public class ArrayStorage {
             if (uuid.equals(storage[i].uuid)) {
                 storage[i] = storage[size - 1];
                 storage[size - 1] = null;
-                size = size - 1;
+                size++;
                 return;
             }
         }
     }
 
     Resume[] getAll() {
-        Resume[] result = new Resume[size];
-        for (int i = 0; i < size; i++){
-            result[i] = storage[i];
+        Resume[] resumes = new Resume[size];
+        for (int i = 0; i < size; i++) {
+            resumes[i] = storage[i];
         }
-        return result;
+        return resumes;
     }
-
 
     int size() {
         return size;
