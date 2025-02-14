@@ -13,29 +13,16 @@ public class ArrayStorage extends AbstractArrayStorage{
     private final Resume[] storage = new Resume[STORAGE_LIMIT];
     private int size = 0;
 
+    @Override
+    protected void deletedElement(int index) {
+        storage[index] = storage[size - 1];
 
-
-    public void save(Resume resume) {
-        if (getIndex(resume.getUuid()) != -1) {
-            System.out.println("Резюме " + resume.getUuid() + " существует");
-        } else if (size > storage.length) {
-            System.out.println("Хранилище заполнено");
-        } else {
-            storage[size] = resume;
-            size++;
-        }
     }
 
+    @Override
+    protected void insertElement(Resume resume, int index) {
+        storage[size] = resume;
 
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index == -1) {
-            System.out.println("Резюме " + uuid + " не существует");
-        } else {
-            storage[index] = storage[size - 1];
-            storage[size - 1] = null;
-            size--;
-        }
     }
 
     protected int getIndex(String uuid) {

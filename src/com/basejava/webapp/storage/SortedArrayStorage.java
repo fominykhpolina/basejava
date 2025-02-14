@@ -14,12 +14,12 @@ public class SortedArrayStorage extends AbstractArrayStorage{
     }
 
     @Override
-    public void save(Resume resume) {
+    protected void deletedElement(int index) {
 
     }
 
     @Override
-    public void delete(String uuid) {
+    protected void insertElement(Resume resume, int index) {
 
     }
 }
