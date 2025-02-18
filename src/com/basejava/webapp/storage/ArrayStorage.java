@@ -9,9 +9,6 @@ import java.util.Arrays;
  */
 
 public class ArrayStorage extends AbstractArrayStorage{
-    private final int STORAGE_LIMIT = 10000;
-    private final Resume[] storage = new Resume[STORAGE_LIMIT];
-    private int size = 0;
 
     @Override
     protected void deletedElement(int index) {

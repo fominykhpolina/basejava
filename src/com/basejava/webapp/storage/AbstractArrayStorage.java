@@ -10,7 +10,6 @@ import java.util.Arrays;
 
 public abstract class AbstractArrayStorage implements Storage{
     protected final int STORAGE_LIMIT = 10000;
-
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
@@ -60,10 +59,6 @@ public abstract class AbstractArrayStorage implements Storage{
         }
     }
 
-    protected abstract void deletedElement(int index);
-
-    protected abstract void insertElement(Resume resume, int index);
-
     public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
@@ -71,5 +66,10 @@ public abstract class AbstractArrayStorage implements Storage{
     public int size() {
         return size;
     }
+
+    protected abstract void deletedElement(int index);
+
+    protected abstract void insertElement(Resume resume, int index);
+
     protected abstract int getIndex(String uuid);
 }
