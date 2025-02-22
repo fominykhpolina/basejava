@@ -37,13 +37,11 @@ public class MainArray {
                     break;
                 case "save":
                     r = new Resume();
-                    r.setUuid(uuid);
                     ARRAY_STORAGE.save(r);
                     printAll();
                     break;
                 case "delete":
                     r = new Resume();
-                    r.setUuid(uuid);
                     ARRAY_STORAGE.delete(uuid);
                     printAll();
                 case "get":
@@ -51,7 +49,6 @@ public class MainArray {
                     break;
                 case "update":
                     r = new Resume();
-                    r.setUuid(uuid);
                     ARRAY_STORAGE.update(r);
                     printAll();
                 case "clear":
