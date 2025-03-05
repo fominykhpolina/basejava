@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public abstract class AbstractArrayStorageTest {
+public abstract class AbstractStorageTest {
     private final Storage storage;
 
     private static final String UUID_1 = "uuid1";
@@ -17,14 +17,19 @@ public abstract class AbstractArrayStorageTest {
     private static final String UUID_3 = "uuid3";
     private static final String UUID_4 = "uuid4";
 
-    private static final Resume RESUME_1 = new Resume(UUID_1);
-    private static final Resume RESUME_2 = new Resume(UUID_2);
-    private static final Resume RESUME_3 = new Resume(UUID_3);
-    private static final Resume RESUME_4 = new Resume(UUID_4);
+    private static final Resume RESUME_1;
+    private static final Resume RESUME_2;
+    private static final Resume RESUME_3;
+    private static final Resume RESUME_4;
 
+    static {
+        RESUME_1 = new Resume(UUID_1);
+        RESUME_2 = new Resume(UUID_2);
+        RESUME_3 = new Resume(UUID_3);
+        RESUME_4 = new Resume(UUID_4);
+    }
 
-
-    public AbstractArrayStorageTest(Storage storage) {
+    public AbstractStorageTest(Storage storage) {
         this.storage = storage;
     }
 
@@ -40,8 +45,8 @@ public abstract class AbstractArrayStorageTest {
     public void clear() {
         storage.clear();
         assertSize(0);
-        storage.getAll();
-        Assert.assertEquals(new Resume[0], storage.size());
+        Resume[] resumeGetAll = storage.getAll();
+        assertArrayEquals(new Resume[0], resumeGetAll);
     }
 
     @org.junit.Test
@@ -92,7 +97,7 @@ public abstract class AbstractArrayStorageTest {
     @Test(expected = StorageException.class)
     public void Overflow() throws Exception {
         try {
-            for (int i = 4; i <= AbstractArrayStorage.STORAGE_LIMIT+1; i++) {
+            for (int i = 4; i <= AbstractArrayStorage.STORAGE_LIMIT + 1; i++) {
                 storage.save(new Resume());
             }
         } catch (StorageException e) {
