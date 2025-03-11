@@ -11,8 +11,8 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 
-public abstract class AbstractArrayStorage implements Storage{
-    protected final int STORAGE_LIMIT = 10000;
+public abstract class AbstractArrayStorage extends AbstractStorage {
+    protected static final int STORAGE_LIMIT = 10000;
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
@@ -21,57 +21,48 @@ public abstract class AbstractArrayStorage implements Storage{
         size = 0;
     }
 
-    public void update(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index == - 1) {
-            throw new NotExistStorageException(resume.getUuid());
-        } else {
-            storage[index] = resume;
-        }
-    }
-
-    public Resume get(String uuid) {
-        int index = getIndex(uuid);
-        if (index == -1) {
-            throw new NotExistStorageException(uuid);
-        }
-        return storage[index];
-    }
-
-    public void save(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        if (index != -1) {
-            throw new ExistStorageException(resume.getUuid());
-        } else if (size > storage.length) {
-            throw new StorageException("Хранилище заполнено", resume.getUuid());
-        } else {
-            insertElement(resume, index);
-            size++;
-        }
-    }
-
-    public void delete(String uuid) {
-        int index = getIndex(uuid);
-        if (index == -1) {
-            throw new NotExistStorageException(uuid);
-        } else {
-            deletedElement(index);
-            storage[size - 1] = null;
-            size--;
-        }
+    public int size() {
+        return size;
     }
 
     public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 
-    public int size() {
-        return size;
+    @Override
+    protected void doUpdate(Resume resume, Object index) {
+        storage[(Integer) index] = resume;
     }
 
-    protected abstract void deletedElement(int index);
+    @Override
+    protected Resume doGet(Object index) {
+        return storage[(Integer) index];
+    }
 
-    protected abstract void insertElement(Resume resume, int index);
+    @Override
+    protected void doDelete(Object index) {
+        deletedElement((Integer) index);
+        storage[size - 1] = null;
+        size--;
+    }
 
-    protected abstract int getIndex(String uuid);
+    @Override
+    protected void doSave(Resume resume, Object index) {
+        if (size > storage.length) {
+            throw new StorageException("Хранилище заполнено", resume.getUuid());
+        } else {
+            insertElement(resume, (Integer) index);
+            size++;
+        }
+    }
+
+    protected boolean isExist(Object index) {
+        return (Integer) index >= 0;
+    }
+
+    protected abstract void deletedElement ( int index);
+
+    protected abstract void insertElement (Resume resume,int index);
+
+    protected abstract Integer getKeySearch (String uuid);
 }
