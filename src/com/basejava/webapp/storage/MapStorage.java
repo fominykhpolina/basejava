@@ -1,25 +1,20 @@
 package com.basejava.webapp.storage;
 
 import com.basejava.webapp.model.Resume;
-import java.util.ArrayList;
-import java.util.List;
 
-public class ListStorage extends AbstractStorage {
-    private final List<Resume> list = new ArrayList<>();
+import java.util.HashMap;
+import java.util.Map;
+
+public class MapStorage extends AbstractStorage {
+    private Map<String, Resume> map = new HashMap<>();
 
     @Override
     protected Object getSearchKey(String uuid) {
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getUuid().equals(uuid)) {
-                return i;
-            }
-        }
-        return null;
+        return uuid;
     }
 
     @Override
     protected void doUpdate(Resume resume, Object searchKey) {
-        list.set((Integer) searchKey, resume);
     }
 
     @Override
@@ -29,31 +24,28 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     protected Resume doGet(Object searchKey) {
-        return list.get((Integer) searchKey);
+        return null;
     }
 
     @Override
     protected void doDelete(Object searchKey) {
-        list.remove(((int) searchKey));
     }
 
     @Override
     protected void doSave(Resume resume, Object searchKey) {
-        list.add(resume);
     }
 
     @Override
     public void clear() {
-        list.clear();
     }
 
     @Override
     public Resume[] getAll() {
-        return list.toArray(new Resume[0]);
+        return new Resume[0];
     }
 
     @Override
     public int size() {
-        return list.size();
+        return 0;
     }
 }
