@@ -1,5 +1,6 @@
 package com.basejava.webapp.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -9,12 +10,17 @@ public class Resume implements Comparable<Resume> {
 
     private final String uuid;
 
-    public Resume() {
-        this(UUID.randomUUID().toString());
+    private final String fullName;
+
+    public Resume(String fullName) {
+        this(UUID.randomUUID().toString(), fullName);
     }
 
-    public Resume(String uuid)  {
+    public Resume(String uuid, String fullName)  {
+        Objects.requireNonNull(uuid, "uuid не должно быть пустым");
+        Objects.requireNonNull(fullName, "fullName должно быть null");
         this.uuid = uuid;
+        this.fullName = fullName;
     }
 
     public String getUuid() {
@@ -43,6 +49,11 @@ public class Resume implements Comparable<Resume> {
 
     @Override
     public int compareTo(Resume o) {
-        return uuid.compareTo(o.uuid);
+        int compare = fullName.compareTo(o.fullName);
+        if (compare != 0) {
+            return compare;
+        } else {
+            return uuid.compareTo(o.uuid);
+        }
     }
 }
