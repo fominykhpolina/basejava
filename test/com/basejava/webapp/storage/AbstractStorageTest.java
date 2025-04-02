@@ -5,12 +5,16 @@ import com.basejava.webapp.model.Resume;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
 public abstract class AbstractStorageTest {
+
+    protected static final File STORAGE_DIR = new File("C:\\Users\\polin\\OneDrive\\Документы\\basejava\\basejava\\src\\com\\basejava\\webapp\\storage");
+
     protected final Storage storage;
 
     private static final String UUID_1 = "uuid1";
@@ -24,13 +28,13 @@ public abstract class AbstractStorageTest {
     private static final Resume RESUME_4;
 
     static {
-        RESUME_1 = new Resume(UUID_1, "name1");
-        RESUME_2 = new Resume(UUID_2, "name2");
-        RESUME_3 = new Resume(UUID_3, "name3");
-        RESUME_4 = new Resume(UUID_4, "name4");
+        RESUME_1 = ResumeTestData.createResume(UUID_1, "name1");
+        RESUME_2 = ResumeTestData.createResume(UUID_2, "name2");
+        RESUME_3 = ResumeTestData.createResume(UUID_3, "name3");
+        RESUME_4 = ResumeTestData.createResume(UUID_4, "name4");
     }
 
-    public AbstractStorageTest(Storage storage) {
+    protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
     }
 
