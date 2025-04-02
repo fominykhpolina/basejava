@@ -2,6 +2,8 @@ package com.basejava.webapp.model;
 
 public class TextSection extends Section {
 
+    private static final long serialVersionUID = 1L;
+
     private final String content;
 
     public TextSection(String content) {
