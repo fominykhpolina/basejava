@@ -2,10 +2,14 @@ package com.basejava.webapp.storage;
 
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,7 +17,14 @@ import static org.junit.Assert.*;
 
 public abstract class AbstractStorageTest {
 
-    protected static final File STORAGE_DIR = new File("C:\\Users\\polin\\OneDrive\\Документы\\basejava\\basejava\\src\\com\\basejava\\webapp\\storage");
+    protected static final Path STORAGE_DIR;
+    static {
+        try {
+            STORAGE_DIR = Files.createTempDirectory("storageTest");
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create temporary directory for test storage", e);
+        }
+    }
 
     protected final Storage storage;
 
@@ -44,6 +55,19 @@ public abstract class AbstractStorageTest {
         storage.save(RESUME_1);
         storage.save(RESUME_2);
         storage.save(RESUME_3);
+    }
+
+    @After
+    public void tearDown() throws IOException {
+        Files.walk(STORAGE_DIR)
+                .map(Path::toFile)
+                .forEach(file -> {
+                    if (file.isDirectory()) {
+                        file.delete();
+                    } else {
+                        file.delete();
+                    }
+                });
     }
 
     @org.junit.Test
