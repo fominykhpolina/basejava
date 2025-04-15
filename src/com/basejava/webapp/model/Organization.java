@@ -1,6 +1,10 @@
 package com.basejava.webapp.model;
 
 import com.basejava.webapp.util.DateUtil;
+import com.basejava.webapp.util.LocalDateAdapter;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -11,22 +15,34 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.basejava.webapp.util.DateUtil.NOW;
-import static java.time.LocalDate.of;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static long serialVersionUID = 1L;
 
-    private final Link homePage;
+    private Link homePage;
+
+    public Organization() {
+    }
+
     private List<Position> listPositions = new ArrayList<>();
 
-     public Organization (String name, String url, Position listPositions) {
-         this(new Link(name, url), Arrays.asList(listPositions));
-     }
+    public Organization(String name, String url, Position listPositions) {
+        this(new Link(name, url), Arrays.asList(listPositions));
+    }
 
     public Organization(Link homePage, List<Position> listPositions) {
         this.homePage = homePage;
         this.listPositions = listPositions;
+    }
+
+    public Link getHomePage() {
+        return homePage;
+    }
+
+    public List<Position> getListPositions() {
+        return listPositions;
     }
 
     @Override
@@ -51,11 +67,16 @@ public class Organization implements Serializable {
         return Objects.hash(homePage, listPositions);
     }
 
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
-        private final LocalDate startDate;
-        private final LocalDate endDate;
-        private final String title;
-        private final String description;
+
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate startDate;
+
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate endDate;
+        private String title;
+        private String description;
 
         public Position(int startYear, Month startMonth, String title, String description) {
             this(DateUtil.of(startYear, startMonth), NOW, title, description);
@@ -69,7 +90,14 @@ public class Organization implements Serializable {
             this.startDate = startDate;
             this.endDate = endDate;
             this.title = title;
-            this.description = description;
+            if (description == null) {
+                this.description = "";
+            } else {
+                this.description = description;
+            }
+        }
+
+        public Position() {
         }
 
         public LocalDate getStartDate() {

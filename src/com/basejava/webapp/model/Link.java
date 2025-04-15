@@ -1,18 +1,29 @@
 package com.basejava.webapp.model;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+
 import java.io.Serializable;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Link implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
-    private final String name;
-    private final String url;
+    private static long serialVersionUID = 1L;
+    private String name;
+    private String url;
 
     public Link(String name, String url) {
         this.name = name;
-        this.url = url;
+        if (url == null) {
+            this.url = "";
+        } else {
+            this.url = url;
+        }
     }
+
+    public Link() {
+    }
+
     public String getName() {
         return name;
     }

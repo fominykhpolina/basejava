@@ -1,5 +1,9 @@
 package com.basejava.webapp.model;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlRootElement;
+
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
@@ -9,27 +13,47 @@ import java.util.UUID;
 /**
  * Initial resume class
  */
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Resume implements Comparable<Resume>, Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private final String uuid;
+    private String uuid;
 
-    private final String fullName;
+    private String fullName;
 
-    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);;
-    private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);;
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+    ;
+    private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
+    ;
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
     }
 
-    public Resume(String uuid, String fullName)  {
+    public Resume(String uuid, String fullName) {
         Objects.requireNonNull(uuid, "uuid не должно быть пустым");
         Objects.requireNonNull(fullName, "fullName должно быть null");
         this.uuid = uuid;
         this.fullName = fullName;
     }
+
+    public Resume() {
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
+    public Map<SectionType, Section> getSections() {
+        return sections;
+    }
+
 
     public String getContact(ContactType type) {
         return contacts.get(type);
