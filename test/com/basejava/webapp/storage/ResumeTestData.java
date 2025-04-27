@@ -10,7 +10,7 @@ public class ResumeTestData {
     public static Resume createResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
 
-        resume.addContact(ContactType.MAIL, "mail@yandex.ru");
+       /* resume.addContact(ContactType.MAIL, "mail@yandex.ru");
         resume.addContact(ContactType.PHONE, "7911");
         resume.addContact(ContactType.SKYPE, "skype" + fullName.toLowerCase());
 
@@ -41,6 +41,7 @@ public class ResumeTestData {
                 new Organization(
                         new Link("Organization2", "http://Organization2.ru"),
                         Arrays.asList())));
+        */
         return resume;
     }
 }
