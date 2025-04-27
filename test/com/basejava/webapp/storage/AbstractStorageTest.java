@@ -4,6 +4,7 @@ import com.basejava.webapp.Config;
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.sql.SqlHelper;
 import com.basejava.webapp.storage.serializer.ObjectStreamSerializer;
 import org.junit.After;
 import org.junit.Before;
@@ -43,6 +44,13 @@ public abstract class AbstractStorageTest {
     @Before
     public void setUp() throws Exception {
         STORAGE_DIR = Config.get().getStorageDir().toPath();
+        Files.createDirectories(STORAGE_DIR);
+
+        storage = createStorage();
+
+        if (storage instanceof SqlStorage) {
+            ((SqlStorage) storage).clear();
+        }
 
         Files.walk(STORAGE_DIR)
                 .sorted((o1, o2) -> -o1.compareTo(o2))
@@ -55,12 +63,12 @@ public abstract class AbstractStorageTest {
                     }
                 });
 
-        storage = createStorage();
-
         storage.save(RESUME_1);
         storage.save(RESUME_2);
         storage.save(RESUME_3);
     }
+
+
 
     protected abstract Storage createStorage();
 
