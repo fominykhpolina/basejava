@@ -9,23 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class FileStorage extends AbstractStorage <File> {
+public class FileStorage extends AbstractStorage<File> {
 
     private final File directory;
-<<<<<<< HEAD:src/com/basejava/webapp/storage/AbstractFileStorage.java
-
-    protected abstract void doWrite(Resume resume, OutputStream os) throws IOException;
-
-    protected abstract Resume doRead(InputStream is) throws IOException;
-=======
     private final StreamSerializer streamSerializer;
->>>>>>> HW9:src/com/basejava/webapp/storage/FileStorage.java
 
     protected FileStorage(File directory, StreamSerializer streamSerializer) {
-        Objects.requireNonNull(directory, "Directory not null");
+        Objects.requireNonNull(directory, "Directory must not be null");
         this.streamSerializer = streamSerializer;
         if (!directory.isDirectory()) {
-            throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
+            throw new IllegalArgumentException(directory.getAbsolutePath() + " is not a directory");
         }
         if (!directory.canRead() || !directory.canWrite()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
@@ -41,13 +34,9 @@ public class FileStorage extends AbstractStorage <File> {
     @Override
     protected void doUpdate(Resume resume, File file) {
         try {
-<<<<<<< HEAD:src/com/basejava/webapp/storage/AbstractFileStorage.java
-            doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
-=======
             streamSerializer.doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
->>>>>>> HW9:src/com/basejava/webapp/storage/FileStorage.java
         } catch (IOException e) {
-            throw new StorageException("Error", resume.getUuid(), e);
+            throw new StorageException("Error updating file", resume.getUuid(), e);
         }
     }
 
@@ -59,45 +48,39 @@ public class FileStorage extends AbstractStorage <File> {
     @Override
     protected Resume doGet(File file) {
         try {
-<<<<<<< HEAD:src/com/basejava/webapp/storage/AbstractFileStorage.java
-            return doRead(new BufferedInputStream(new FileInputStream(file)));
-=======
             return streamSerializer.doRead(new BufferedInputStream(new FileInputStream(file)));
->>>>>>> HW9:src/com/basejava/webapp/storage/FileStorage.java
         } catch (IOException e) {
-            throw new StorageException("Error", file.getName(), e);
+            throw new StorageException("Error reading file", file.getName(), e);
         }
     }
 
     @Override
     protected void doDelete(File file) {
-        if(!file.delete()) {
-            throw new StorageException("Error", file.getName());
+        if (!file.delete()) {
+            throw new StorageException("Error deleting file", file.getName());
         }
     }
 
     @Override
     protected void doSave(Resume resume, File file) {
         try {
-            file.createNewFile();
-<<<<<<< HEAD:src/com/basejava/webapp/storage/AbstractFileStorage.java
-            doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
-=======
->>>>>>> HW9:src/com/basejava/webapp/storage/FileStorage.java
+            if (!file.createNewFile()) {
+                throw new StorageException("Couldn't create file " + file.getAbsolutePath(), file.getName());
+            }
+            doUpdate(resume, file);
         } catch (IOException e) {
-            throw new StorageException("IO error" + file.getAbsolutePath(), file.getName(), e);
+            throw new StorageException("IO error", file.getName(), e);
         }
-        doUpdate(resume, file);
     }
 
     @Override
     protected List<Resume> doCopyAll() {
         File[] files = getFiles();
-        List<Resume> list = new ArrayList<>(files.length);
+        List<Resume> resumes = new ArrayList<>(files.length);
         for (File file : files) {
-            list.add(doGet(file));
+            resumes.add(doGet(file));
         }
-        return list;
+        return resumes;
     }
 
     @Override

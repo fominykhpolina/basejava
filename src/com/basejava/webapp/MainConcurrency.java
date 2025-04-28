@@ -2,6 +2,10 @@ package com.basejava.webapp;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+
+import com.basejava.webapp.util.NumberUtils;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.*;
@@ -102,8 +106,8 @@ public class MainConcurrency {
         // DeadlockDemo.createDeadlock(firstLock, secondLock);
         // DeadlockDemo.createDeadlock(secondLock, firstLock);
 
-        minValue(new int[]{1, 2, 3, 3, 2, 3});
-        oddOrEven(List.of(1, 2, 3, 4, 5));
+        NumberUtils.minValue(new int[]{1, 2, 3, 3, 2, 3});
+        NumberUtils.oddOrEven(List.of(1, 2, 3, 4, 5));
     }
 
     private void inc() {
@@ -120,20 +124,5 @@ public class MainConcurrency {
 //                readFile
 //                ...
 //        }
-    }
-
-    public static int minValue(int[] values) {
-        return Arrays.stream(values)
-                .distinct()
-                .sorted()
-                .reduce(0, (r, i) -> r * 10 + i);
-    }
-
-    public static List<Integer> oddOrEven(List<Integer> integers) {
-        int sum = integers.stream().mapToInt(Integer::intValue).sum();
-        boolean isEven = sum % 2 == 0;
-        return integers.stream()
-                .filter(i -> i % 2 != (isEven ? 0 : 1))
-                .collect(Collectors.toList());
     }
 }

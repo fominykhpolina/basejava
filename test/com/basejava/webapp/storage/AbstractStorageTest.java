@@ -1,8 +1,10 @@
 package com.basejava.webapp.storage;
 
+import com.basejava.webapp.Config;
 import com.basejava.webapp.exception.ExistStorageException;
 import com.basejava.webapp.exception.NotExistStorageException;
 import com.basejava.webapp.model.Resume;
+import com.basejava.webapp.sql.SqlHelper;
 import com.basejava.webapp.storage.serializer.ObjectStreamSerializer;
 import org.junit.After;
 import org.junit.Before;
@@ -13,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -21,10 +24,10 @@ public abstract class AbstractStorageTest {
     protected Path STORAGE_DIR;
     protected Storage storage;
 
-    private static final String UUID_1 = "uuid1";
-    private static final String UUID_2 = "uuid2";
-    private static final String UUID_3 = "uuid3";
-    private static final String UUID_4 = "uuid4";
+    private static final String UUID_1 = UUID.randomUUID().toString();
+    private static final String UUID_2 = UUID.randomUUID().toString();
+    private static final String UUID_3 = UUID.randomUUID().toString();
+    private static final String UUID_4 = UUID.randomUUID().toString();
 
     private static final Resume RESUME_1;
     private static final Resume RESUME_2;
@@ -40,7 +43,14 @@ public abstract class AbstractStorageTest {
 
     @Before
     public void setUp() throws Exception {
-        STORAGE_DIR = Files.createTempDirectory("storageTest");
+        STORAGE_DIR = Config.get().getStorageDir().toPath();
+        Files.createDirectories(STORAGE_DIR);
+
+        storage = createStorage();
+
+        if (storage instanceof SqlStorage) {
+            ((SqlStorage) storage).clear();
+        }
 
         Files.walk(STORAGE_DIR)
                 .sorted((o1, o2) -> -o1.compareTo(o2))
@@ -53,12 +63,12 @@ public abstract class AbstractStorageTest {
                     }
                 });
 
-        storage = createStorage();
-
         storage.save(RESUME_1);
         storage.save(RESUME_2);
         storage.save(RESUME_3);
     }
+
+
 
     protected abstract Storage createStorage();
 
