@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SqlStorage implements Storage {
+
     private final SqlHelper sqlHelper;
 
     public SqlStorage(String dbUrl, String dbUser, String dbPassword) {
@@ -145,4 +146,5 @@ public class SqlStorage implements Storage {
             resume.addContact(ContactType.valueOf(rs.getString("type")), value);
         }
     }
+
 }
