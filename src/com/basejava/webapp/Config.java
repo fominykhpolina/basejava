@@ -1,5 +1,8 @@
 package com.basejava.webapp;
 
+import com.basejava.webapp.storage.SqlStorage;
+import com.basejava.webapp.storage.Storage;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,6 +15,7 @@ public class Config {
 
     private final Properties props = new Properties();
     private final File storageDir;
+    private final Storage storage;
 
     private Config() {
         try (InputStream is = new FileInputStream(PROPS)) {
@@ -23,6 +27,11 @@ public class Config {
         } catch (IOException e) {
             throw new IllegalStateException("Ошибка загрузки файла настроек: " + PROPS.getAbsolutePath(), e);
         }
+        storage = new SqlStorage(
+                props.getProperty("db.url"),
+                props.getProperty("db.user"),
+                props.getProperty("db.password")
+        );
     }
 
     public static Config get() {
@@ -33,16 +42,7 @@ public class Config {
         return storageDir;
     }
 
-    public String getDbUrl() {
-        return props.getProperty("db.url");
+    public Storage getStorage() {
+        return storage;
     }
-
-    public String getDbUser() {
-        return props.getProperty("db.user");
-    }
-
-    public String getDbPassword() {
-        return props.getProperty("db.password");
-    }
-
 }

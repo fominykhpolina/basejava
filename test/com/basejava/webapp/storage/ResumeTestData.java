@@ -10,11 +10,11 @@ public class ResumeTestData {
     public static Resume createResume(String uuid, String fullName) {
         Resume resume = new Resume(uuid, fullName);
 
-       /* resume.addContact(ContactType.MAIL, "mail@yandex.ru");
+        resume.addContact(ContactType.MAIL, "mail@yandex.ru");
         resume.addContact(ContactType.PHONE, "7911");
         resume.addContact(ContactType.SKYPE, "skype" + fullName.toLowerCase());
 
-        resume.addSection(SectionType.OBJECTIVE, new TextSection("Object1"));
+        /* resume.addSection(SectionType.OBJECTIVE, new TextSection("Object1"));
         resume.addSection(SectionType.PERSONAL, new TextSection("Personal1"));
 
         resume.addSection(SectionType.ACHIEVEMENT, new ListSection("Achievement1", "Achievement2", "Achievement3"));
