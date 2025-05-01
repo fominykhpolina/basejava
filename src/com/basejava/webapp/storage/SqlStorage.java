@@ -23,6 +23,7 @@ public class SqlStorage implements Storage {
     public void clear() {
         sqlHelper.execute("DELETE FROM resume");
     }
+
     @Override
     public Resume get(String uuid) {
         return sqlHelper.execute("" +
@@ -91,25 +92,34 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return sqlHelper.execute(
-                "SELECT * FROM resume r " +
-                        "LEFT JOIN contact c ON r.uuid = c.resume_uuid " +
-                        "ORDER BY r.full_name, r.uuid",
-                ps -> {
-                    ResultSet rs = ps.executeQuery();
-                    Map<String, Resume> resumes = new LinkedHashMap<>();
-                    while (rs.next()) {
-                        String uuid = rs.getString("uuid");
-                        Resume resume = resumes.get(uuid);
-                        if (resume == null) {
-                            resume = new Resume(uuid, rs.getString("full_name"));
-                            resumes.put(uuid, resume);
-                        }
+        return sqlHelper.transactionalExecute(conn -> {
+            Map<String, Resume> resumes = new LinkedHashMap<>();
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT * FROM resume ORDER BY full_name, uuid")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    String uuid = rs.getString("uuid");
+                    Resume resume = new Resume(uuid, rs.getString("full_name"));
+                    resumes.put(uuid, resume);
+                }
+            }
+
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT * FROM contact")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    String uuid = rs.getString("resume_uuid");
+                    Resume resume = resumes.get(uuid);
+                    if (resume != null) {
                         addContact(rs, resume);
                     }
-                    return new ArrayList<>(resumes.values());
-                });
+                }
+            }
+
+            return new ArrayList<>(resumes.values());
+        });
     }
+
 
     @Override
     public int size() {
