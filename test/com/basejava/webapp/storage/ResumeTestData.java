@@ -14,7 +14,7 @@ public class ResumeTestData {
         resume.addContact(ContactType.PHONE, "7911");
         resume.addContact(ContactType.SKYPE, "skype" + fullName.toLowerCase());
 
-        /* resume.addSection(SectionType.OBJECTIVE, new TextSection("Object1"));
+        resume.addSection(SectionType.OBJECTIVE, new TextSection("Object1"));
         resume.addSection(SectionType.PERSONAL, new TextSection("Personal1"));
 
         resume.addSection(SectionType.ACHIEVEMENT, new ListSection("Achievement1", "Achievement2", "Achievement3"));
@@ -41,7 +41,6 @@ public class ResumeTestData {
                 new Organization(
                         new Link("Organization2", "http://Organization2.ru"),
                         Arrays.asList())));
-        */
         return resume;
     }
 }
