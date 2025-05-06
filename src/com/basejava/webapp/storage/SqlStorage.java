@@ -73,6 +73,9 @@ public class SqlStorage implements Storage {
             }
             deleteContacts(conn, resume.getUuid());
             insertContacts(conn, resume);
+            deleteSections(conn, resume);
+            insertSections(conn, resume);
+
             return null;
         });
     }
@@ -87,6 +90,7 @@ public class SqlStorage implements Storage {
                 ps.execute();
             }
             insertContacts(conn, resume);
+            insertSections(conn, resume);
             return null;
         });
     }
@@ -108,6 +112,7 @@ public class SqlStorage implements Storage {
     public List<Resume> getAllSorted() {
         return sqlHelper.transactionalExecute(conn -> {
             Map<String, Resume> resumes = new LinkedHashMap<>();
+
             try (PreparedStatement ps = conn.prepareStatement(
                     "SELECT * FROM resume ORDER BY full_name, uuid")) {
                 ResultSet rs = ps.executeQuery();
@@ -118,8 +123,7 @@ public class SqlStorage implements Storage {
                 }
             }
 
-            try (PreparedStatement ps = conn.prepareStatement(
-                    "SELECT * FROM contact")) {
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM contact")) {
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()) {
                     String uuid = rs.getString("resume_uuid");
@@ -130,10 +134,20 @@ public class SqlStorage implements Storage {
                 }
             }
 
+            try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM section")) {
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    String uuid = rs.getString("resume_uuid");
+                    Resume resume = resumes.get(uuid);
+                    if (resume != null) {
+                        addSection(rs, resume);
+                    }
+                }
+            }
+
             return new ArrayList<>(resumes.values());
         });
     }
-
 
     @Override
     public int size() {
